@@ -2,16 +2,16 @@ let p1 = {
   x: 20,
   y: 0,
   width: 10,
-  height: 80,
-  speed: 6
+  height: 100,
+  speed: 10
 };
 
 let p2 = {
   x: 0, // set in setup once we know canvas width
   y: 0,
   width: 10,
-  height: 80,
-  speed: 6
+  height: 100,
+  speed: 8
 };
 
 function setup() {
