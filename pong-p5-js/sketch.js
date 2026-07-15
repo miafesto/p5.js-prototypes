@@ -14,7 +14,6 @@ let p2 = {
   width: 10,
   height: 100,
   speed: 8,
-
   score: 0
 };
 
