@@ -25,6 +25,8 @@ let ball = {
   speedX: 7,
 };
 
+let isPaused = false;
+
 function resetBall() {
   ball.x = width / 2;
   ball.y = height / 2;
@@ -54,6 +56,12 @@ function setup() {
   ball.y = height / 2;
 }
 
+function keyPressed() {
+  if (key === ' ') {
+    isPaused = !isPaused;
+  }
+}
+
 function draw() {
   background(0);
   fill(255);
@@ -61,59 +69,76 @@ function draw() {
   text(p1.score, width/2 + 150, 50);
   text(p2.score, width/2 - 200, 50);
 
+  if (!isPaused) {
+    // Player 1: Arrow keys
+    if (keyIsDown(UP_ARROW)) {
+      p1.y -= p1.speed;
+    }
+    if (keyIsDown(DOWN_ARROW)) {
+      p1.y += p1.speed;
+    }
 
-  // Player 1: Arrow keys
-  if (keyIsDown(UP_ARROW)) {
-    p1.y -= p1.speed;
-  }
-  if (keyIsDown(DOWN_ARROW)) {
-    p1.y += p1.speed;
-  }
+    // Keep both paddles in bounds
+    p1.y = constrain(p1.y, 0, height - p1.height);
+    p2.y = constrain(p2.y, 0, height - p2.height);
 
-  // Keep both paddles in bounds
-  p1.y = constrain(p1.y, 0, height - p1.height);
-  p2.y = constrain(p2.y, 0, height - p2.height);
+    // Constrain ball
+      // Bounce off top and bottom walls
+      if (ball.y <= 0 || ball.y >= height - ball.size) {
+        ball.speedY *= -1;
+      }
+
+      //Bounce off of paddles
+    if (
+      ball.x - ball.size / 2 <= p2.x + p2.width &&
+      ball.y >= p2.y &&
+      ball.y <= p2.y + p2.height
+    ) {
+      ball.speedX *= -1;
+    }
+
+    if (
+      ball.x + ball.size / 2 >= p1.x &&
+      ball.y >= p1.y &&
+      ball.y <= p1.y + p1.height
+    ) {
+      ball.speedX *= -1;
+    }
+
+    if (ball.x < 0) {
+      p1.score += 1;
+      resetBall();
+    }
+    else if (ball.x > width) {
+      p2.score += 1;
+      resetBall();
+    }
+
+    ball.x += ball.speedX;
+    ball.y += ball.speedY;
+
+    textAlign(CENTER, CENTER);
+    textSize(20);
+    text("Press SPACE to pause game", width/2, height - 50);
+  }
 
   // Draw both paddles
   fill(255);
   rect(p1.x, p1.y, p1.width, p1.height);
   rect(p2.x, p2.y, p2.width, p2.height);
 
-  // Constrain ball
-    // Bounce off top and bottom walls
-    if (ball.y <= 0 || ball.y >= height - ball.size) {
-      ball.speedY *= -1;
-    }
-
-    //Bounce off of paddles
-  if (
-    ball.x - ball.size / 2 <= p2.x + p2.width &&
-    ball.y >= p2.y &&
-    ball.y <= p2.y + p2.height
-  ) {
-    ball.speedX *= -1;
-  }
-
-  if (
-    ball.x + ball.size / 2 >= p1.x &&
-    ball.y >= p1.y &&
-    ball.y <= p1.y + p1.height
-  ) {
-    ball.speedX *= -1;
-  }
-
-  if (ball.x < 0) {
-    p1.score += 1;
-    resetBall();
-  }
-  else if (ball.x > width) {
-    p2.score += 1;
-    resetBall();
-  }
-
   // Draw ball
   fill(255);
   circle(ball.x, ball.y, ball.size);
-  ball.x += ball.speedX;
-  ball.y += ball.speedY;
+
+  // Paused overlay
+    if (isPaused) {
+      textAlign(CENTER, CENTER);
+
+      textSize(48);
+      text("PAUSED", width / 2, height / 2);
+
+      textSize(20);
+      text("press SPACE to resume game", width / 2, height / 2 + 50);
+    }
 }
