@@ -27,6 +27,22 @@ let ball = {
 
 let isPaused = false;
 
+let vignette;
+
+function drawScanlines() {
+  noStroke();
+  fill(0, 0, 0, 60); // black, semi-transparent
+  for (let y = 0; y < height; y += 4) {
+    rect(0, y, width, 2);
+  }
+}
+
+function drawFlicker() {
+  let flickerAmount = random(0, 15);
+  fill(255, 255, 255, flickerAmount);
+  rect(0, 0, width, height);
+}
+
 function resetBall() {
   ball.x = width / 2;
   ball.y = height / 2;
@@ -54,6 +70,17 @@ function setup() {
   // Ball
   ball.x = width / 2;
   ball.y = height / 2;
+
+  vignette = createGraphics(width, height);
+  let ctx = vignette.drawingContext;
+  let gradient = ctx.createRadialGradient(
+    width / 2, height / 2, height / 4,   // inner circle
+    width / 2, height / 2, width / 1.2   // outer circle
+  );
+  gradient.addColorStop(0, 'rgba(0,0,0,0)');
+  gradient.addColorStop(1, 'rgba(0,0,0,0.6)');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, width, height);
 }
 
 function keyPressed() {
@@ -66,6 +93,7 @@ function draw() {
   background(0);
   fill(255);
   textSize(50);
+  fill('#0f0');
   text(p1.score, width/2 + 150, 50);
   text(p2.score, width/2 - 200, 50);
 
@@ -118,22 +146,26 @@ function draw() {
     ball.y += ball.speedY;
 
     textAlign(CENTER, CENTER);
+    textFont('Courier New');
     textSize(20);
+    fill('#0f0');
     text("Press SPACE to pause game", width/2, height - 50);
   }
 
   // Draw both paddles
-  fill(255);
+  fill('#0f0');
   rect(p1.x, p1.y, p1.width, p1.height);
   rect(p2.x, p2.y, p2.width, p2.height);
 
   // Draw ball
-  fill(255);
+  fill('#0f0');
   circle(ball.x, ball.y, ball.size);
 
   // Paused overlay
     if (isPaused) {
       textAlign(CENTER, CENTER);
+      textFont('Courier New');
+      fill('#0f0');
 
       textSize(48);
       text("PAUSED", width / 2, height / 2);
@@ -141,4 +173,9 @@ function draw() {
       textSize(20);
       text("press SPACE to resume game", width / 2, height / 2 + 50);
     }
+
+  // CRT overlay effects (draw last, on top of everything)
+  drawScanlines();
+  drawFlicker();
+  image(vignette, 0, 0);
 }
