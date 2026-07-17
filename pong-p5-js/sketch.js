@@ -37,12 +37,6 @@ function drawScanlines() {
   }
 }
 
-function drawFlicker() {
-  let flickerAmount = random(0, 15);
-  fill(255, 255, 255, flickerAmount);
-  rect(0, 0, width, height);
-}
-
 function resetBall() {
   ball.x = width / 2;
   ball.y = height / 2;
@@ -53,6 +47,31 @@ function resetBall() {
 
   ball.speedX = direction * speed * cos(angle);
   ball.speedY = speed * sin(angle);
+}
+
+let p2TargetOffset = 0;
+
+function moveCPU() {
+  if (ball.speedX < 0) {
+    if (random() < 0.15) return;
+
+    let paddleCenter = p2.y + p2.height / 2;
+    let target = ball.y + p2TargetOffset;
+
+    if (paddleCenter < target - 10) {
+      p2.y += p2.speed;
+    } else if (paddleCenter > target + 10) {
+      p2.y -= p2.speed;
+    }
+  } else {
+    // Drift back toward center when ball isn't heading this way
+    let center = height / 2 - p2.height / 2;
+    if (p2.y < center - 5) {
+      p2.y += p2.speed / 2;
+    } else if (p2.y > center + 5) {
+      p2.y -= p2.speed / 2;
+    }
+  }
 }
 
 function setup() {
@@ -106,6 +125,8 @@ function draw() {
       p1.y += p1.speed;
     }
 
+    moveCPU();
+
     // Keep both paddles in bounds
     p1.y = constrain(p1.y, 0, height - p1.height);
     p2.y = constrain(p2.y, 0, height - p2.height);
@@ -123,6 +144,7 @@ function draw() {
       ball.y <= p2.y + p2.height
     ) {
       ball.speedX *= -1;
+      p2.speed = random(5, 10);
     }
 
     if (
@@ -176,6 +198,5 @@ function draw() {
 
   // CRT overlay effects (draw last, on top of everything)
   drawScanlines();
-  drawFlicker();
   image(vignette, 0, 0);
 }
