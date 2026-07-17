@@ -56,6 +56,11 @@ function setup() {
 
 function draw() {
   background(0);
+  fill(255);
+  textSize(50);
+  text(p1.score, width/2 + 150, 50);
+  text(p2.score, width/2 - 200, 50);
+
 
   // Player 1: Arrow keys
   if (keyIsDown(UP_ARROW)) {
