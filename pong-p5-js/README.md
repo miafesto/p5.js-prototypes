@@ -1,25 +1,8 @@
 # pong-p5-js
 
-## Getting Started
+This is a Pong clone made with the p5.js framework programmed in JavaScript. It features a player one controlled by the user, a CPU player 2, and pause functionality by pressing SPACE to pause and un-pause. For aesthetics, I've also added a CRT overlay for a retro vibe. 
 
-Open `index.html` in your web browser and start editing `sketch.js`.
+How To Play:
+Control your paddle using the UP and DOWN ARROWS. Pause by pressing SPACE, and unpause by pressing SPACE again.
 
-## Running Locally
-
-For projects with media files, use a local server:
-
-```bash
-# Using Python
-python -m http.server 8000
-
-# Using Node.js
-npx http-server
-
-# Using VS Code Live Server extension
-# Right-click index.html -> "Open with Live Server"
-```
-
-## Resources
-
-- [p5.js 2.0](https://beta.p5js.org/)
-- [p5.js Reference](https://p5js.org/reference/)
+Thank you for checking out my mini project!
